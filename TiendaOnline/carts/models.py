@@ -9,6 +9,7 @@ from django.db.models.signals import m2m_changed
 import uuid
 import decimal
 
+
 class Cart(models.Model):
     cart_id = models.CharField(max_length=100, null=True, blank=True, unique=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -27,6 +28,10 @@ class Cart(models.Model):
         self.update_subtotal()
         self.update_total()
 
+        if self.order:
+            self.order.update_total()
+
+
     def update_subtotal(self):
         self.subtotal = sum([ 
             cp.quantity * cp.product.price for cp in self.products_related()
@@ -41,6 +46,11 @@ class Cart(models.Model):
 
     def products_related(self):
         return self.cartproducts_set.select_related("product")
+    
+
+    @property
+    def order(self):
+        return self.order_set.first()
 
 class CartProductsManager(models.Manager):
 
@@ -75,6 +85,8 @@ def set_cart_id(sender, instance, *args, **kwargs):
 def update_totals(sender, instance, action, *args, **kwargs):
     if action == "post_add" or action == "post_remove" or action == "post_clear":
         instance.update_totals()
+
+
 
 def post_save_update_total(sender, instance, *args, **kwargs):
     instance.cart.update_totals()
