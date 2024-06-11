@@ -1,26 +1,32 @@
-<form method="post">
-    {% csrf_token %}
 
-    <style>
-        .form-group {
-            margin-bottom: 15px; /* Ajusta el valor según tus necesidades */
-        }
-    </style>
+<div class="mb-5">
 
-    {% for field in form %}
-        <div class="form-group">
-            {{ field.label_tag }}
-            {{ field }}
+    </div>
 
-            {% if field.errors %}
-                {{ field.errors }}
-            {% endif %}
+    <form method="post">
+        {% csrf_token %}
+{% comment %} 
+        <style>
+            .form-group {
+                margin-bottom: 15px; /* Ajusta el valor según tus necesidades */
+            }
+        </style> {% endcomment %}
 
-        </div>
-    {% endfor %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
 
-    <button type="submit" class="btn btn-primary">Agregar</button>
-</form>
+                {% if field.errors %}
+                    {{ field.errors }}
+                {% endif %}
 
-</body>
-</html>
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">{{ message }}</button>
+    </form>
+
+    </body>
+    </html>
+</div>

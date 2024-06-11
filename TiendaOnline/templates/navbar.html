@@ -22,13 +22,15 @@
                 
                 </a>
             </li>
-            <li class="nav-item {% if request.path == shipping_addresses %}active{% endif %}">
-                <a class="nav-link" href="{{ shipping_addresses }}">
+            {% if user.is_authenticated %}
+                <li class="nav-item {% if request.path == shipping_addresses %}active{% endif %}">
+                    <a class="nav-link" href="{{ shipping_addresses }}">
+                        
+                        Mis direcciones <span class="fas fa-location-arrow"></span>
                     
-                    Mis direcciones <span class="fas fa-location-arrow"></span>
-                
-                </a>
-            </li>
+                    </a>
+                </li>
+            {% endif %}
         </ul>
 
         <ul class="navbar-nav ms-auto"> <!-- Agregué esta línea para envolver los elementos de la barra de navegación en una lista -->
