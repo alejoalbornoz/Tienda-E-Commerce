@@ -1,6 +1,9 @@
 from typing import Any
+
 from django.http import HttpRequest
 from django.http.response import HttpResponse
+from django.http.response import HttpResponseRedirect
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import reverse 
@@ -15,6 +18,9 @@ from django.urls import reverse_lazy
 
 from .models import ShippingAddress
 from .forms import ShippingAddressForm
+from carts.utils import get_or_create_cart
+from orders.utils import get_or_create_order
+
 
 from django.views.generic import ListView
 from django.views.generic import UpdateView
@@ -59,6 +65,9 @@ class ShippingAddressDeleteView(LoginRequiredMixin, DeleteView):
         if request.user.id != self.get_object().user_id: 
             return redirect ("carts:cart")
         
+        if self.get_object().has_orders():
+            return redirect ("shipping_addresses:shipping_addresses")
+        
         return super(ShippingAddressDeleteView, self).dispatch(request, *args, **kwargs)
 
 @login_required(login_url="login")
@@ -72,6 +81,17 @@ def create(request):
         shipping_address.default = not request.user.has_shipping_address()
 
         shipping_address.save()
+
+        if request.GET.get("next"):
+            if request.GET["next"] == reverse("orders:address"):
+                cart = get_or_create_cart(request)
+                order = get_or_create_order(cart, request)
+
+                order.update_shipping_address(shipping_address)
+
+                return HttpResponseRedirect(request.GET["next"])
+
+
 
 
         messages.success(request, "Direccion creada exitosamente")
