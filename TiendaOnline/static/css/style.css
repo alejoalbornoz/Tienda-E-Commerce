@@ -1,3 +1,12 @@
 h1{
     color:red
 }
+
+
+.single-line {
+    white-space: nowrap;
+}
+
+.font-weight-bold-custom {
+    font-weight: bold !important;
+}

@@ -3,18 +3,12 @@ import uuid
 from django.db import models
 from users.models import User
 from carts.models import Cart
-from enum import Enum
+
 from django.db.models.signals import pre_save
 from shipping_addresses.models import ShippingAddress
 
-
-class OrderStatus(Enum):
-    CREATED = "CREATED"
-    PAYED = "PAYED"
-    COMPLETED = "COMPLETED"
-    CANCELED = "CANCELED"
-
-choices = [(tag, tag.value) for tag in OrderStatus]
+from .common import OrderStatus
+from .common import choices
 
 class Order(models.Model):
     order_id = models.CharField(max_length=100, null=False, blank=False, unique=True)
@@ -53,6 +47,14 @@ class Order(models.Model):
     def get_total(self):
         cart_total = self.cart.total
         return cart_total + self.shipping_total
+    
+    def cancel(self):
+        self.status = OrderStatus.CANCELED
+        self.save()
+
+    def complete(self):
+        self.status = OrderStatus.COMPLETED
+        self.save()
 
 def set_order_id(sender, instance, *args, **kwargs):
     if not instance.order_id:
