@@ -3,6 +3,7 @@
 {% url "carts:cart" as cart %}
 {% url "shipping_addresses:shipping_addresses" as shipping_addresses %}
 {% url "orders:completeds" as completeds %}
+{% url "billing_profiles:create" as billing_profiles %}
 
 
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -34,13 +35,19 @@
                         Mis pedidos <span class="fas fa-shipping-fast"></span>
                     </a>
                 </li>
+
+                <li class="nav-item {% if request.path == billing_profiles %}active{% endif %}">
+                    <a class="nav-link" href="{{ billing_profiles }}">
+                        Mis métodos de pago <span class="fab fa-cc-stripe"></span>
+                    </a>
+                </li>
             {% endif %}
         </ul>
 
-        <ul class="navbar-nav ms-auto"> <!-- Agregué esta línea para envolver los elementos de la barra de navegación en una lista -->
+        <ul class="navbar-nav ms-auto"> 
             {% if user.is_authenticated %}
 
-            <li class="nav-item"> <!-- Cambié de "navbar-item" a "nav-item" -->
+            <li class="nav-item"> 
                 <a href="{% url 'logout' %}" class="nav-link">
                     <span class="fas fa-sign-in-alt"></span>
                     Logout
@@ -50,15 +57,14 @@
             {% else %}
 
             <li class="nav-item">
-                <a href="{% url 'login' %}" class="nav-link"> <!-- Cambié "{{ login }}" a "{% url 'login' %}" -->
+                <a href="{% url 'login' %}" class="nav-link"> 
                     <span class="fas fa-user-plus"></span>
                     Login
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="{% url 'register' %}" class="nav-link"> <!-- Cambié "{{ register }}" a "{% url 'register' %}" -->
-                    <span class="fas fa-user"></span>
+                <a href="{% url 'register' %}" class="nav-link"> 
                     Registro
                 </a>
             </li>

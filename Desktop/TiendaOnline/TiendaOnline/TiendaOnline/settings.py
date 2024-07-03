@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "carts",
     "orders",
     "shipping_addresses",
-    "promo_codes"
+    "promo_codes",
+    "billing_profiles"
 ]
 
 MIDDLEWARE = [
@@ -125,12 +126,15 @@ USE_I18N = True
 USE_TZ = True
 
 from decouple import config
+import mercadopago
 
 EMAIL_HOST = "smtp.googlemail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "alejoalbornoz912@gmail.com"
 EMAIL_HOST_PASSWORD = config("PASSWORD", default = "default_value")
 EMAIL_USE_TLS = True
+
+mp = mercadopago.SDK("TEST-8484342945127450-070114-1d2d71a5d143b1782ba93534c222a278-618922141")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
